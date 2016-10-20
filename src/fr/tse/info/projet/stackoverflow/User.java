@@ -1,13 +1,25 @@
 package fr.tse.info.projet.stackoverflow;
-
+/**
+ * <b>User class : defines user profile</b> <\n>
+ * Contains user's name and user's badges
+ */
 public class User {
-	// User class : defines profile
-	String name; // User's name
-	String password; // Simple String password to acces profile
+	
+	/**
+	 * User's Name in StackOverflow
+	 */
+	String name; 
+	String password; 
+	/**
+	 * User's Badges
+	 * @see Badge
+	 */
 	Badge[] badges; // TODO compare to datas extracted from Json files
-
+	
+	/**
+	 * Function to show user's name and badges
+	 */
 	public void show() {
-		// Function to show user's details
 		System.out.println("User's name :" + name + "\n" + "User's badges : " // TODO
 																				// add
 																				// toString(badges)

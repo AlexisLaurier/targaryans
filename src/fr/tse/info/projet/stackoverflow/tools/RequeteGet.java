@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.zip.GZIPInputStream;
 
 import com.google.gson.Gson;
@@ -36,26 +37,31 @@ public class RequeteGet {
 		HttpURLConnection connection = (HttpURLConnection) ourUrl.openConnection();
 		connection.setRequestMethod("GET");
 		BufferedReader in = new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
+		String inputLine;
 
-
-		/*while ((inputLine = in.readLine()) != null)
+		while ((inputLine = in.readLine()) != null)
 			resultat += inputLine;
-		in.close();*/
-		return in.readLine();
+		in.close();
+		return resultat;
 		
 	}
 
 	public static String findContributor(String subject) throws IOException {
 		String contributor = "";
-		Map<Integer, Integer> contributorsMap = new HashMap<Integer, Integer>();
 		contributor = recupData(
-				"https://api.stackexchange.com/2.2/questions/40190834/answers?order=desc&sort=activity&site=stackoverflow");
+				"https://api.stackexchange.com/2.2/tags/"+subject+"/top-answerers/all_time?site=stackoverflow");
+		Gson json = new Gson();
+		
 		return contributor;
 	}
 
 	public static void main(String[] args) {
 		try {
-			System.out.println(findContributor("coucou"));
+			String tag;
+			Scanner sc = new Scanner(System.in);
+			System.out.println("Bonjour sur quel tag souhaitez vous trouver l'utilisateur le plus actif?");
+			tag = sc.next();
+			System.out.println(findContributor(tag));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

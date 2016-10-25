@@ -7,10 +7,14 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.zip.GZIPInputStream;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import java.net.HttpURLConnection;
@@ -43,16 +47,38 @@ public class RequeteGet {
 			resultat += inputLine;
 		in.close();
 		return resultat;
-		
+
 	}
 
 	public static String findContributor(String subject) throws IOException {
-		String contributor = "";
-		contributor = recupData(
-				"https://api.stackexchange.com/2.2/tags/"+subject+"/top-answerers/all_time?site=stackoverflow");
 		Gson json = new Gson();
+		String contributor;
+		String jsonData = "";
+		jsonData = recupData("https://api.stackexchange.com/2.2/tags/" + subject
+				+ "/top-answerers/all_time?pagesize=1&site=stackoverflow");
+
+		// Creation d'un parser pour recup les donnée sous forme de JsonObject
+		JsonParser parser = new JsonParser();
+		JsonObject obj = parser.parse(jsonData).getAsJsonObject();
+
+		// Recuperation du seul parametre interessant "items" qui est sous forme
+		// de tableau
+		JsonArray responseString = (JsonArray) obj.get("items");
+		// Test de l'existance d'une reponse (donc du tag)
 		
+		if (responseString.size()>0){
+		// Recuperation de l'user et du nombre de message du premier element du
+		// tableau (meilleure contributeur
+		Response response = json.fromJson(responseString.get(0), Response.class);
+
+		contributor = "L'utilisateur le plus actif sur le tag : " + subject + " est "
+				+ response.getUser().toString() + " avec un total de " + response.getPost_count() + " participation.";
+		}
+		else{
+			contributor = "Desole le tag specifie n'a pas ete trouve.";
+		}
 		return contributor;
+		
 	}
 
 	public static void main(String[] args) {
@@ -62,6 +88,7 @@ public class RequeteGet {
 			System.out.println("Bonjour sur quel tag souhaitez vous trouver l'utilisateur le plus actif?");
 			tag = sc.next();
 			System.out.println(findContributor(tag));
+			sc.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

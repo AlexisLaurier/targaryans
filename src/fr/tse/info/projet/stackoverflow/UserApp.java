@@ -1,9 +1,9 @@
 package fr.tse.info.projet.stackoverflow;
 /**
- * <b>User class : defines user profile</b> <\n>
+ * <b>UserApp class : defines application user profile</b> <\n>
  * Contains user's name and user's badges
  */
-public class User {
+public class UserApp {
 	
 	/**
 	 * User's Name in StackOverflow
@@ -43,7 +43,7 @@ public class User {
 		this.password = password;
 	}
 
-	public User(String name, String password) {
+	public UserApp(String name, String password) {
 		super();
 		this.name = name;
 		this.password = password;
